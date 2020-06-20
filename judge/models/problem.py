@@ -180,7 +180,7 @@ class Problem(models.Model):
             return True
         return user.has_perm('judge.edit_own_problem') and \
                (user.profile.id in self.editor_ids or
-                self.is_organization_private and self.organizations.filter(admin=user.profile).exists())
+                self.is_organization_private and self.organizations.filter(admins=user.profile).exists())
 
     def is_accessible_by(self, user, skip_contest_problem_check=False):
         # Problem is public.
