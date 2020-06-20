@@ -178,7 +178,9 @@ class Problem(models.Model):
             return False
         if user.has_perm('judge.edit_all_problem') or user.has_perm('judge.edit_public_problem') and self.is_public:
             return True
-        return user.has_perm('judge.edit_own_problem') and user.profile.id in self.editor_ids
+        return user.has_perm('judge.edit_own_problem') and \
+               (user.profile.id in self.editor_ids or
+                self.is_organization_private and self.organizations(admin=user.profile).exists())
 
     def is_accessible_by(self, user, skip_contest_problem_check=False):
         # Problem is public.
@@ -271,6 +273,7 @@ class Problem(models.Model):
             return cls.objects.all()
 
         q = Q(authors=user.profile) | Q(curators=user.profile)
+        q |= Q(organizations__in=user.profile.organizations.filter(admins=user.profile))
 
         if user.has_perm('judge.edit_public_problem'):
             q |= Q(is_public=True)
