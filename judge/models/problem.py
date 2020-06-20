@@ -273,7 +273,7 @@ class Problem(models.Model):
             return cls.objects.all()
 
         q = Q(authors=user.profile) | Q(curators=user.profile)
-        q |= Q(is_organization_private=True, organizations__in=user.profile.organizations.filter(admins=user.profile))
+        q |= Q(is_organization_private=True, organizations__in=user.profile.admin_of.all())
 
         if user.has_perm('judge.edit_public_problem'):
             q |= Q(is_public=True)
