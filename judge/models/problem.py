@@ -239,6 +239,7 @@ class Problem(models.Model):
         #   - otherwise
         #       - not is_public problems
         #           - author or curator or tester
+        #           - is_organization_private and admin of organization
         #       - is_public problems
         #           - not is_organization_private or in organization or `judge.see_organization_problem`
         #           - author or curator or tester
@@ -252,6 +253,9 @@ class Problem(models.Model):
                     Q(is_organization_private=False) |
                     Q(is_organization_private=True, organizations__in=user.profile.organizations.all())
                 )
+
+            if user.has_perm('judge.edit_own_problem'):
+                q |= Q(is_organization_private=True, organizations__in=user.profile.admin_of.all())
 
             # Authors, curators, and testers should always have access, so OR at the very end.
             q |= Q(authors=user.profile)
