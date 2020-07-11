@@ -35,4 +35,3 @@ lupa
 netaddr
 webauthn
 bleach
-pymysql
