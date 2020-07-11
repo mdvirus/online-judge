@@ -36,4 +36,3 @@ netaddr
 webauthn
 bleach
 pymysql
-MySQLdb
