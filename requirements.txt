@@ -35,3 +35,4 @@ lupa
 netaddr
 webauthn
 bleach
+gunicorn==19.7.1
